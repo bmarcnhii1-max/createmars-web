@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CREATEMARS — разработчик</title>
+<meta name="description" content="CREATEMARS — C#, Kotlin, Python. Виджеты, Android, боты, нейроигрушки.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05010d;
+  --cyan:#00f0ff;
+  --pink:#ff2bd6;
+  --mars:#ff6b35;
+  --txt:#e8e6f0;
+  --mut:#9a94b8;
+  --card:rgba(20,10,40,.62);
+  --line:rgba(0,240,255,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.grid-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50% -10%, rgba(255,43,214,.14), transparent),
+    radial-gradient(ellipse 70% 50% at 50% 110%, rgba(0,240,255,.10), transparent),
+    linear-gradient(rgba(0,240,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,.05) 1px, transparent 1px);
+  background-size:100% 100%,100% 100%,44px 44px,44px 44px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 40%, black 30%, transparent 75%);
+}
+.wrap{position:relative;z-index:1;max-width:1020px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.logo{font-family:Orbitron,sans-serif;font-weight:900;font-size:18px;letter-spacing:3px;
+  color:#fff;text-shadow:0 0 12px var(--cyan),0 0 42px rgba(0,240,255,.6)}
+.logo span{color:var(--pink);text-shadow:0 0 12px var(--pink),0 0 42px rgba(255,43,214,.6)}
+.langs{display:flex;gap:6px}
+.langbtn{font-family:monospace;font-size:11px;color:var(--mut);background:transparent;
+  border:1px solid var(--line);border-radius:6px;padding:4px 9px;cursor:pointer}
+.langbtn.on{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 10px rgba(0,240,255,.3)}
+@media(max-width:640px){.langs{display:flex}}
+nav a{color:var(--mut);text-decoration:none;font-size:13px;margin-left:22px;transition:.2s}
+nav a:hover{color:var(--cyan);text-shadow:0 0 10px var(--cyan)}
+.hero{text-align:center;padding:84px 0 60px}
+.badge{display:inline-block;font-size:12px;letter-spacing:2px;color:var(--mars);
+  border:1px solid rgba(255,107,53,.5);border-radius:99px;padding:6px 16px;margin-bottom:26px;
+  text-shadow:0 0 10px rgba(255,107,53,.8);box-shadow:0 0 18px rgba(255,107,53,.18),inset 0 0 12px rgba(255,107,53,.08)}
+h1{font-family:Orbitron,sans-serif;font-weight:900;font-size:clamp(44px,9vw,96px);line-height:1.02;
+  background:linear-gradient(100deg,#fff 10%,var(--cyan) 45%,var(--pink) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 26px rgba(0,240,255,.35))}
+.tagline{margin-top:18px;color:var(--mut);font-size:15px}
+.tagline b{color:var(--mars);text-shadow:0 0 12px rgba(255,107,53,.7)}
+.cta{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:Orbitron,sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;
+  padding:13px 30px;border-radius:10px;text-decoration:none;transition:.2s;cursor:pointer}
+.btn-hot{color:#031318;background:linear-gradient(100deg,var(--cyan),#7df9ff);
+  box-shadow:0 0 24px rgba(0,240,255,.45)}
+.btn-hot:hover{box-shadow:0 0 44px rgba(0,240,255,.8);transform:translateY(-2px)}
+.btn-ghost{color:var(--pink);border:1px solid rgba(255,43,214,.6);
+  box-shadow:0 0 18px rgba(255,43,214,.18),inset 0 0 14px rgba(255,43,214,.08)}
+.btn-ghost:hover{background:rgba(255,43,214,.12);box-shadow:0 0 34px rgba(255,43,214,.45);transform:translateY(-2px)}
+section{padding:34px 0}
+h2{font-family:Orbitron,sans-serif;font-size:15px;font-weight:700;letter-spacing:4px;color:#fff;
+  margin-bottom:20px;text-shadow:0 0 14px rgba(0,240,255,.5)}
+h2::before{content:'// ';color:var(--cyan)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;
+  backdrop-filter:blur(8px);transition:.25s;position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:.25s;
+  background:linear-gradient(120deg,transparent 30%,rgba(0,240,255,.09) 50%,transparent 70%)}
+.card:hover{transform:translateY(-4px);border-color:rgba(0,240,255,.45);
+  box-shadow:0 8px 40px rgba(0,240,255,.15)}
+.card:hover::after{opacity:1}
+.card h3{font-family:Orbitron,sans-serif;font-size:15px;margin-bottom:8px;color:#fff}
+.card h3 a{color:inherit;text-decoration:none}
+.card h3 a:hover{color:var(--cyan)}
+.card p{font-size:12.5px;color:var(--mut);line-height:1.65}
+.card .stack{margin-top:12px;font-size:11px;color:var(--cyan);letter-spacing:1px}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.about{grid-template-columns:1fr}nav{display:none}.hero{padding:60px 0 40px}}
+.term{background:rgba(0,0,0,.55);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+  font-size:13px;line-height:2;box-shadow:inset 0 0 40px rgba(0,240,255,.04)}
+.term .p{color:var(--cyan)}
+.term .v{color:#fff}
+footer{text-align:center;padding:44px 0 54px;color:var(--mut);font-size:12px}
+footer a{color:var(--pink);text-decoration:none}
+footer a:hover{text-shadow:0 0 10px var(--pink)}
+.links{display:flex;gap:12px;justify-content:center;margin:26px 0 6px;flex-wrap:wrap}
+.chip{font-size:12px;color:var(--txt);text-decoration:none;border:1px solid var(--line);
+  border-radius:99px;padding:9px 20px;transition:.2s;background:rgba(0,240,255,.04)}
+.chip:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,240,255,.3);transform:translateY(-2px)}
+.marsdog{width:150px;height:150px;margin:0 auto 10px;border-radius:50%;object-fit:cover;
+  border:2px solid rgba(255,107,53,.6);
+  box-shadow:0 0 60px rgba(255,107,53,.55),0 0 140px rgba(255,107,53,.25);
+  animation:float 5s ease-in-out infinite}
+.crew img{width:100%;border-radius:10px;display:block;margin-bottom:14px;
+  border:1px solid rgba(255,107,53,.4);box-shadow:0 0 30px rgba(255,107,53,.25)}
+.crew .love{margin-top:12px;font-family:Orbitron,sans-serif;font-size:12px;letter-spacing:2px;
+  color:var(--mars);text-shadow:0 0 12px rgba(255,107,53,.8)}
+.dogname{margin:6px 0 4px;font-family:Orbitron,sans-serif;font-size:12px;letter-spacing:3px;
+  color:var(--mars);text-shadow:0 0 12px rgba(255,107,53,.8)}
+.paper{background:linear-gradient(175deg,#efe3c2 0%,#e6d3a3 60%,#dcc792 100%);
+  color:#2a2118;border-radius:6px;padding:30px 34px 26px;position:relative;
+  box-shadow:0 10px 50px rgba(0,0,0,.6),inset 0 0 80px rgba(120,85,30,.18);
+  font-family:Georgia,'Times New Roman',serif;transform:rotate(-.4deg)}
+.paper::before{content:'';position:absolute;inset:10px;border:2px solid #2a2118;opacity:.55;
+  border-radius:3px;pointer-events:none}
+.masthead{font-family:Georgia,serif;font-weight:700;font-size:clamp(26px,5vw,44px);
+  text-align:center;color:#a31212;letter-spacing:3px;border-bottom:3px double #2a2118;
+  padding-bottom:10px;text-shadow:none}
+.orgline{text-align:center;font-size:12px;letter-spacing:2px;margin-top:8px;color:#4a3a26}
+.dateline{text-align:right;font-size:12px;font-style:italic;color:#4a3a26;margin:10px 0 4px}
+.jokerubric{font-size:13px;font-weight:700;letter-spacing:2px;color:#a31212;margin:12px 0 8px}
+.joketext{font-size:16.5px;line-height:1.75;min-height:120px;white-space:pre-line}
+.paperbtn{margin-top:14px;font-family:Georgia,serif;font-size:13px;letter-spacing:1px;
+  background:transparent;color:#a31212;border:1px solid #a31212;border-radius:6px;
+  padding:9px 22px;cursor:pointer;transition:.2s}
+.paperbtn:hover{background:#a31212;color:#efe3c2}
+@media(max-width:640px){.paper{padding:22px 18px}.joketext{font-size:15px;min-height:140px}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="grid-bg"></div>
+<div class="wrap">
+
+  <header>
+    <div class="logo">CREATE<span>MARS</span></div>
+    <nav>
+      <a href="#about" data-i18n="navAbout">обо мне</a>
+      <a href="#gazeta" data-i18n="navGaz">газета</a>
+      <a href="#projects" data-i18n="navProj">проекты</a>
+      <a href="#contact" data-i18n="navContact">связь</a>
+    </nav>
+    <div class="langs">
+      <button class="langbtn on" data-lang="ru">РУ</button>
+      <button class="langbtn" data-lang="uk">УК</button>
+      <button class="langbtn" data-lang="en">EN</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <img class="marsdog" src="dog.jpg" alt="пёс-марсианин">
+    <div class="dogname" data-i18n="dogLove">★ обожаю пса ★</div>
+    <div class="badge" data-i18n="badge">★ ОБОЖАЮ МАРС ★</div>
+    <h1>CREATEMARS</h1>
+    <p class="tagline"><span data-i18n="tagline">вайбкодер · в коде не шарю — шарю, что мне надо</span> · <b data-i18n="mars">Земля → Марс</b></p>
+    <div class="cta">
+      <a class="btn btn-hot" href="#projects" data-i18n="btnProj">ПРОЕКТЫ</a>
+      <a class="btn btn-ghost" href="https://t.me/create_mars" target="_blank" rel="noopener">TELEGRAM</a>
+    </div>
+  </div>
+
+  <section id="about">
+    <h2 data-i18n="secAbout">обо мне</h2>
+    <div class="about">
+      <div class="term">
+        <div><span class="p">$</span> whoami</div>
+        <div class="v" data-i18n="whoami">разработчик, делаю софт которым пользуются</div>
+        <div><span class="p">$</span> cat <span data-i18n="interests">интересы</span></div>
+        <div class="v" data-i18n="interestsV">виджеты · android · боты · нейроигрушки без бюджета</div>
+        <div><span class="p">$</span> cat <span data-i18n="approach">подход</span></div>
+        <div class="v" data-i18n="approachV">вайбкодинг: в коде не шарю, софт пишу для себя</div>
+        <div><span class="p">$</span> <span data-i18n="whouser">кто пользуется</span></div>
+        <div class="v" data-i18n="whouserV">я сам. каждый день</div>
+        <div><span class="p">$</span> cat <span data-i18n="mission">миссия</span></div>
+        <div class="v" data-i18n="missionV">писать код на Земле, запускать — на Марсе</div>
+      </div>
+      <div class="term">
+        <div><span class="p">$</span> <span data-i18n="langs">языки</span> --top</div>
+        <div class="v">Kotlin 47% · C# 32% · Python 15%</div>
+        <div><span class="p">$</span> <span data-i18n="status">статус</span></div>
+        <div class="v" data-i18n="statusV">открыт к интересным проектам</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gazeta">
+    <h2 data-i18n="secGaz">стенгазета</h2>
+    <div class="paper">
+      <div class="masthead">МАРСИАНСКАЯ ПРАВДА</div>
+      <div class="orgline">орган хорошего настроения · № <span id="issue">142</span></div>
+      <div class="dateline" id="dateline"></div>
+      <div class="jokerubric" data-i18n="gazRubric">ТРУДЯЩИЕСЯ ШУТЯТ:</div>
+      <div class="joketext" id="sovjoke"></div>
+      <button class="paperbtn" id="nextjoke" data-i18n="gazNext">читать следующий ↓</button>
+      <div style="margin-top:12px;text-align:center"><a href="gazeta.html" data-i18n="gazFull" style="font-size:13px;color:#a31212">открыть выпуск целиком →</a></div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2 data-i18n="secProj">проекты</h2>
+    <div class="cards">
+      <div class="card">
+        <h3><a href="https://github.com/bmarcnhii1-max/scrcpybar" target="_blank" rel="noopener">scrcpybar</a></h3>
+        <p data-i18n="p1">Музыка с телефона в Game Bar на ПК: виджет, караоке-слова, пульт. Только USB, один exe.</p>
+        <div class="stack">C# · KOTLIN</div>
+      </div>
+      <div class="card">
+        <h3><a href="https://github.com/bmarcnhii1-max/clawd-android" target="_blank" rel="noopener">clawd-android</a></h3>
+        <p data-i18n="p2">Android-клиент: музыка, управление и companion-сервисы.</p>
+        <div class="stack">KOTLIN</div>
+      </div>
+      <div class="card">
+        <h3><a href="https://github.com/bmarcnhii1-max/clawd-botik" target="_blank" rel="noopener">clawd-botik</a></h3>
+        <p data-i18n="p3">Клиент Clawd для Windows: установка, лаунчер, политики.</p>
+        <div class="stack">PYTHON</div>
+      </div>
+      <div class="card">
+        <h3><a href="https://github.com/bmarcnhii1-max/sticker-userbot" target="_blank" rel="noopener">sticker-userbot</a></h3>
+        <p data-i18n="p4">Юзербот для стикеров в Telegram: триггеры, пакеты, сервис.</p>
+        <div class="stack">PYTHON</div>
+      </div>
+      <div class="card">
+        <h3><a href="https://github.com/bmarcnhii1-max/vlc-gamebar-widget" target="_blank" rel="noopener">vlc-gamebar-widget</a></h3>
+        <p data-i18n="p5">Пульт VLC в Game Bar: скорость, перемотка, плейлист, установщик в один клик.</p>
+        <div class="stack">C#</div>
+      </div>
+      <div class="card">
+        <h3><a href="https://github.com/bmarcnhii1-max/bmarcnhii1-max" target="_blank" rel="noopener" data-i18n="p6t">профиль</a></h3>
+        <p data-i18n="p6">Этот профиль: анекдот дня, живая статистика коммитов, спарклайн активности.</p>
+        <div class="stack">PYTHON · SVG · CI</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2 data-i18n="secContact">связь</h2>
+    <div class="links">
+      <a class="chip" href="https://github.com/bmarcnhii1-max" target="_blank" rel="noopener">GitHub</a>
+      <a class="chip" href="https://t.me/create_mars" target="_blank" rel="noopener">Telegram — @create_mars</a>
+      <a class="chip" href="https://huggingface.co/bmarchiii" target="_blank" rel="noopener">Hugging Face</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 createmars · <span data-i18n="built">собрано под неоновым небом</span> · <a href="https://github.com/bmarcnhii1-max">github</a>
+  </footer>
+
+</div>
+<script>
+// RU / UK / EN — jokes stay Russian, they don't survive translation
+var I18N = {
+ru: {navAbout:"обо мне",navGaz:"газета",navProj:"проекты",navContact:"связь",badge:"★ ОБОЖАЮ МАРС ★",dogLove:"★ обожаю пса ★",tagline:"вайбкодер · в коде не шарю — шарю, что мне надо",mars:"Земля → Марс",btnProj:"ПРОЕКТЫ",secAbout:"обо мне",whoami:"разработчик, делаю софт которым пользуются",interests:"интересы",interestsV:"виджеты · android · боты · нейроигрушки без бюджета",approach:"подход",approachV:"вайбкодинг: в коде не шарю, софт пишу для себя",whouser:"кто пользуется",whouserV:"я сам. каждый день",mission:"миссия",missionV:"писать код на Земле, запускать — на Марсе",langs:"языки",status:"статус",statusV:"открыт к интересным проектам",secGaz:"стенгазета",gazRubric:"ТРУДЯЩИЕСЯ ШУТЯТ:",gazNext:"читать следующий ↓",gazFull:"открыть выпуск целиком →",secProj:"проекты",secContact:"связь",built:"собрано под неоновым небом",
+p1:"Музыка с телефона в Game Bar на ПК: виджет, караоке-слова, пульт. Только USB, один exe.",p2:"Android-клиент: музыка, управление и companion-сервисы.",p3:"Клиент Clawd для Windows: установка, лаунчер, политики.",p4:"Юзербот для стикеров в Telegram: триггеры, пакеты, сервис.",p5:"Пульт VLC в Game Bar: скорость, перемотка, плейлист, установщик в один клик.",p6t:"профиль",p6:"Этот профиль: анекдот дня, живая статистика коммитов, спарклайн активности."},
+uk: {navAbout:"про мене",navGaz:"газета",navProj:"проекти",navContact:"зв'язок",badge:"★ ОБОЖНЮЮ МАРС ★",dogLove:"★ обожнюю пса ★",tagline:"вайбкодер · в коді не шарю — шарю, що мені треба",mars:"Земля → Марс",btnProj:"ПРОЕКТИ",secAbout:"про мене",whoami:"розробник, роблю софт яким користуються",interests:"інтереси",interestsV:"віджети · android · боти · нейроіграшки без бюджету",approach:"підхід",approachV:"вайбкодинг: в коді не шарю, софт пишу для себе",whouser:"хто користується",whouserV:"я сам. кожен день",mission:"місія",missionV:"писати код на Землі, запускати — на Марсі",langs:"мови",status:"статус",statusV:"відкритий до цікавих проєктів",secGaz:"стінгазета",gazRubric:"ТРУДЯЩІ ЖАРТУЮТЬ:",gazNext:"читати наступний ↓",gazFull:"відкрити випуск цілком →",secProj:"проекти",secContact:"зв'язок",built:"зібрано під неоновим небом",
+p1:"Музика з телефона в Game Bar на ПК: віджет, караоке-слова, пульт. Тільки USB, один exe.",p2:"Android-клієнт: музика, керування та companion-сервіси.",p3:"Клієнт Clawd для Windows: встановлення, лаунчер, політики.",p4:"Юзербот для стікерів у Telegram: тригери, пакети, сервіс.",p5:"Пульт VLC у Game Bar: швидкість, перемотка, плейлист, встановлювач в один клік.",p6t:"профіль",p6:"Цей профіль: анекдот дня, жива статистика комітів, спарклайн активності."},
+en: {navAbout:"about",navGaz:"paper",navProj:"projects",navContact:"contact",badge:"★ LOVE MARS ★",dogLove:"★ love my dog ★",tagline:"vibecoder · can't code — know what I need",mars:"Earth → Mars",btnProj:"PROJECTS",secAbout:"about",whoami:"developer, I make software people actually use",interests:"interests",interestsV:"widgets · android · bots · zero-budget neural toys",approach:"approach",approachV:"vibecoding: can't code, write software for myself",whouser:"who uses it",whouserV:"me. every day",mission:"mission",missionV:"write code on Earth, run it on Mars",langs:"langs",status:"status",statusV:"open to interesting projects",secGaz:"wall paper",gazRubric:"WORKERS JOKE:",gazNext:"read next ↓",gazFull:"open full issue →",secProj:"projects",secContact:"contact",built:"built under a neon sky",
+p1:"Phone music in PC Game Bar: widget, karaoke lyrics, remote. USB only, single exe.",p2:"Android client: music, control and companion services.",p3:"Clawd client for Windows: setup, launcher, policies.",p4:"Telegram sticker userbot: triggers, packs, service.",p5:"VLC remote in Game Bar: speed, seek, playlist, one-click installer.",p6t:"profile",p6:"This profile: joke of the day, live commit stats, activity sparkline."}
+};
+function setLang(l){
+  if(!I18N[l]) l = 'ru';
+  try{ localStorage.setItem('lang', l); }catch(e){}
+  document.documentElement.lang = l === 'uk' ? 'uk' : l;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var v = I18N[l][el.getAttribute('data-i18n')];
+    if(v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('.langbtn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-lang') === l);
+  });
+}
+document.querySelectorAll('.langbtn').forEach(function(b){
+  b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
+});
+try{ setLang(localStorage.getItem('lang') || 'ru'); }catch(e){ setLang('ru'); }
+</script>
+<script>
+// starfield
+(function(){
+  var c = document.getElementById('stars'), x = c.getContext('2d'), stars = [], W, H;
+  function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+  addEventListener('resize', resize); resize();
+  for (var i = 0; i < 160; i++) stars.push({x: Math.random(), y: Math.random(), r: Math.random() * 1.4 + .2, s: Math.random() * .0006 + .0001, tw: Math.random() * 6.28});
+  var t = 0;
+  (function frame(){
+    t += .016; x.clearRect(0, 0, W, H);
+    for (var i = 0; i < stars.length; i++){
+      var st = stars[i], yy = (st.y + t * st.s) % 1, a = .35 + .65 * Math.abs(Math.sin(t * 2 + st.tw));
+      x.globalAlpha = a; x.fillStyle = i % 9 === 0 ? '#ff2bd6' : (i % 5 === 0 ? '#00f0ff' : '#ffffff');
+      x.beginPath(); x.arc(st.x * W, yy * H, st.r, 0, 6.29); x.fill();
+    }
+    x.globalAlpha = 1; requestAnimationFrame(frame);
+  })();
+})();
+// soviet newspaper: one fresh joke per day + pager
+(function(){
+  var jokes = [
+    "Штирлиц долго смотрел на рентгеновский снимок.\nПотом рентгенолог не выдержал:\n— Мужчина, это очередь на флюорографию, а не телевизор.",
+    "Чапаев спрашивает Петьку:\n— Петька, что такое интернет?\n— Это когда Анка пишет письмо, а читает вся дивизия.",
+    "Чукча купил смартфон.\nТеперь у него в телефоне два чукчи: один звонит, а второй трубку не берёт.",
+    "— Товарищ прапорщик, а правда, что мысль материальна?\n— Так точно! Вчера подумал о дембеле — сегодня наряд вне очереди.",
+    "Вовочка спрашивает:\n— Марья Ивановна, а правда, что дважды два — четыре?\n— Правда, Вовочка.\n— А в долларах?",
+    "Петька спрашивает Чапаева:\n— Василий Иванович, ты Ленина видел?\n— Видел, Петька.\n— А какой он?\n— Как я. Только бреется чаще.",
+    "Штирлиц ел картошку.\nКартошка была белорусская — Штирлиц ел её с уважением.",
+    "Армянское радио спрашивают:\n— Что будет, если скрестить программиста с бухгалтером?\n— 1С.",
+    "Чукча устроился модератором.\nТеперь интернет у него делится на «однако» и «однако, здравствуйте».",
+    "Штирлиц отправил в Центр шифровку.\nЦентр ответил: «Принято. Кстати, подписка на шифровки у вас заканчивается — продлите?»"
+  ];
+  var now = new Date();
+  var start = Date.parse(now.getFullYear() + '-01-01T00:00:00');
+  var day = Math.floor((now - start) / 86400000);
+  var idx = day % jokes.length;
+  var box = document.getElementById('sovjoke');
+  function show(){ box.textContent = jokes[idx % jokes.length]; }
+  show();
+  document.getElementById('nextjoke').addEventListener('click', function(){ idx++; show(); });
+  var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  document.getElementById('dateline').textContent =
+    now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' года';
+  document.getElementById('issue').textContent = 100 + (day % 200);
+})();
+</script>
+</body>
+</html>

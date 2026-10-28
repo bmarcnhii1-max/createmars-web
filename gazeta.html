@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Марсианская правда — 4 выпуска</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0a06;font-family:Georgia,'Times New Roman',serif;color:#2a2118;
+  padding:28px 16px;min-height:100vh}
+.sheet{max-width:780px;margin:0 auto;background:linear-gradient(175deg,#efe3c2 0%,#e6d3a3 60%,#dcc792 100%);
+  border-radius:6px;padding:34px 40px 28px;position:relative;
+  box-shadow:0 10px 60px rgba(0,0,0,.7),inset 0 0 90px rgba(120,85,30,.18)}
+.sheet::before{content:'';position:absolute;inset:12px;border:2px solid #2a2118;opacity:.55;border-radius:3px;pointer-events:none}
+.top{display:flex;justify-content:space-between;font-size:12px;letter-spacing:2px;color:#4a3a26;text-transform:uppercase}
+h1{font-size:clamp(28px,6vw,50px);text-align:center;color:#a31212;letter-spacing:3px;margin:12px 0 6px}
+.sub{text-align:center;font-size:13px;letter-spacing:2px;color:#4a3a26;border-bottom:3px double #2a2118;padding-bottom:12px}
+.date{text-align:right;font-size:12px;font-style:italic;color:#4a3a26;margin:10px 0 4px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+.tab{font-family:Georgia,serif;font-size:13px;letter-spacing:1px;background:transparent;
+  color:#4a3a26;border:1px solid #4a3a26;border-radius:6px;padding:8px 14px;cursor:pointer;transition:.2s}
+.tab.on,.tab:hover{background:#a31212;border-color:#a31212;color:#efe3c2}
+.edname{font-size:13px;font-weight:700;letter-spacing:2px;color:#a31212;margin:14px 0 2px}
+.lead{border:2px solid #a31212;border-radius:4px;padding:16px 20px;margin:10px 0 6px}
+.lead .k{font-size:12px;font-weight:700;letter-spacing:2px;color:#a31212;margin-bottom:8px}
+.lead .t{font-size:18px;line-height:1.7;white-space:pre-line}
+h2{font-size:14px;letter-spacing:3px;color:#a31212;margin:24px 0 4px;border-bottom:1px solid #2a2118;padding-bottom:6px}
+article{padding:12px 2px;border-bottom:1px dotted #8a744e}
+article:last-of-type{border-bottom:none}
+article h3{font-size:15.5px;margin-bottom:5px}
+article h3 .n{color:#a31212;margin-right:8px}
+article p{font-size:15px;line-height:1.65;white-space:pre-line}
+.back{display:block;text-align:center;margin-top:24px;font-size:14px;color:#a31212}
+@media(max-width:640px){.sheet{padding:24px 18px 20px}.lead .t{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="top"><span>орган хорошего настроения</span><span>№ <span id="issue">–</span></span></div>
+  <h1>МАРСИАНСКАЯ<br>ПРАВДА</h1>
+  <div class="sub">4 редакции · выбирай свою</div>
+  <div class="date" id="dateline"></div>
+  <div class="tabs" id="tabs"></div>
+  <div class="edname" id="edname"></div>
+  <div class="lead">
+    <div class="k">АНЕКДОТ ДНЯ:</div>
+    <div class="t" id="lead"></div>
+  </div>
+  <h2>ВЕСЬ ВЫПУСК:</h2>
+  <div id="all"></div>
+  <a class="back" href="index.html">← вернуться на createmars.web.id</a>
+</div>
+<script>
+var EDITIONS = [
+{name:"№1 · Советский выпуск", jokes:[
+["Штирлиц и рентген","Штирлиц долго смотрел на рентгеновский снимок.\nПотом рентгенолог не выдержал:\n— Мужчина, это очередь на флюорографию, а не телевизор."],
+["Чапаев и интернет","Чапаев спрашивает Петьку:\n— Петька, что такое интернет?\n— Это когда Анка пишет письмо, а читает вся дивизия."],
+["Чапаев и Ленин","Петька спрашивает Чапаева:\n— Василий Иванович, ты Ленина видел?\n— Видел, Петька.\n— А какой он?\n— Как я. Только бреется чаще."],
+["Чукча и смартфон","Чукча купил смартфон.\nТеперь у него в телефоне два чукчи: один звонит, а второй трубку не берёт."],
+["Чукча-модератор","Чукча устроился модератором.\nТеперь интернет у него делится на «однако» и «однако, здравствуйте»."],
+["Прапорщик и мысль","— Товарищ прапорщик, а правда, что мысль материальна?\n— Так точно! Вчера подумал о дембеле — сегодня наряд вне очереди."],
+["Вовочка и доллар","Вовочка спрашивает:\n— Марья Ивановна, а правда, что дважды два — четыре?\n— Правда, Вовочка.\n— А в долларах?"],
+["Штирлиц и картошка","Штирлиц ел картошку.\nКартошка была белорусская — Штирлиц ел её с уважением."],
+["Штирлиц и точка","Штирлиц долго смотрел в одну точку.\nПотом точка не выдержала и отвела взгляд."],
+["Армянское радио","Армянское радио спрашивают:\n— Что будет, если скрестить программиста с бухгалтером?\n— 1С."]
+]},
+{name:"№2 · Интернационал", jokes:[
+["Начальство строже","Встретились как-то русский, немец и американец — и давай спорить, у кого начальство строже.\nНемец: «Нам запретили опаздывать даже на минуту».\nАмериканец: «А нам — уходить вовремя».\nРусский: «А у нас начальник строже всех: он сам не знает, чего хочет, поэтому запрещает всё»."],
+["Кто дольше без интернета","Встретились как-то русский, немец и американец. Решили выяснить, кто дольше без интернета проживёт.\nНемец продержался день — и пошёл чинить роутер соседу.\nАмериканец продержался два — и написал об этом в твиттер с чужого телефона.\nРусский прожил неделю и не заметил: у него провайдер и так каждую пятницу «профилактика»."],
+["Чей интернет быстрее","Встретились как-то русский, немец и американец — и давай хвастаться, у кого интернет быстрее.\nНемец: «У меня гигабит — кино скачивается, пока чайник закипает».\nАмериканец: «У меня спутник — ловлю даже посреди океана».\nРусский: «А у меня самый быстрый: деньги со счёта улетают раньше, чем страницы грузятся»."],
+["Чья сборная сильнее","Встретились как-то русский, немец и американец — и решили выяснить, чья сборная сильнее.\nНемец: «Наша — машина».\nАмериканец: «А наша — шоу».\nРусский: «А наша — сюрприз. Никогда не знаешь, в какую сторону»."],
+["Кто дольше молчит","Встретились как-то русский, немец и американец — и поспорили, кто дольше молчать умеет.\nНемец замолчал на час. Американец — на два.\nРусский молчит до сих пор.\nЕго спрашивают: «Ты выиграл?»\nОн: «Тсс. Я ещё в игре»."],
+["Заблудились в лесу","Встретились как-то русский, немец и американец. Заблудились в лесу.\nНемец: «У меня GPS».\nАмериканец: «У меня спутниковая связь».\nРусский: «Спокойно, я по мху сориентируюсь».\nЧерез час все трое вышли к машине. Мох не подвёл."],
+["Рыбалка","Встретились как-то русский, немец и американец на рыбалке.\nКлевало только у русского. Остальные сказали, что это баг водоёма."],
+["Цены","Встретились как-то русский, украинец и белорус — и давай жаловаться, у кого цены выше.\nРусский: «У нас хлеб дорожает каждую неделю».\nУкраинец: «А у нас сало — уже деликатес».\nБелорус: «А у нас всё стабильно. Стабильно дорого»."],
+["Застолье","Встретились как-то русский, украинец и грузин — и сели за стол.\nРусский поднял рюмку: «Ну, за встречу!»\nУкраинец: «За здоровье!»\nГрузин встал и говорит: «Друзья мои…»\nЧерез час все поняли: тост только начался."]
+]},
+{name:"№3 · Изя и Мойша", jokes:[
+["Как дела","Два еврея встречаются:\n— Как дела?\n— Не дождётесь!"],
+["Сто рублей","Встретились как-то два еврея. Один говорит:\n— Слушай, одолжи сто рублей.\nВторой:\n— А когда отдашь?\nПервый:\n— Вот за это я тебя и уважаю — сразу о деле!"],
+["Кто беднее","Два еврея спорят, кто беднее.\nПервый: «У меня даже долгов нет — никто не даёт!»\nВторой: «Подумаешь! Мне банк в кредите отказал с формулировкой „безнадёжен даже для коллекторов“»."],
+["Бизнес","Два еврея открывают бизнес.\nПервый вносит идею. Второй — деньги клиентов. Оба довольны."],
+["Кризис","Два еврея читают газету.\nОдин: «Смотри, кризис!»\nВторой: «Отлично. Значит, всё подешевеет. Кроме того, что нам надо»."],
+["Опоздал","Два еврея договорились встретиться.\nОдин опоздал на час и говорит:\n— Зато я сэкономил тебе час ожидания в следующий раз."]
+]},
+{name:"№4 · Вайбкодер в 90-х", jokes:[
+["Модем","Вайбкодер из 2026-го попал в 1996-й. Слышит звуки модема:\n— О, ретро-эстетика! У вас тут lo-fi стрим 24/7 бесплатно?\n— Это интернет, сынок.\n— А-а-а. А пароль от вай-фая где?"],
+["Блок-схема","Вайбкодер показывает программисту 1996 года свой код.\n— А где блок-схема?\n— Какая блок-схема?\n— А ТЗ?\n— Вот. *показывает промпт «сделай красиво»*\n— ...А тестировщик у тебя есть?\n— Есть. Зовут Клод.\n— А где он сидит?\n— В облаке.\n— В КАКОМ ОБЛАКЕ, ТАМ ДОЖДЬ?!"],
+["Нейросеть","Вайбкодер: «У меня дома нейросеть код пишет».\n1996-й: «Нейро-что? У нас тут Нортон Коммандер, и то глючит»."],
+["Дискета","— Слышь, а дискеты у вас почём?\n— Рубль штука.\n— А сколько влезает?\n— Мегабайт с хвостиком.\n*смотрит на свой node_modules*\n— Понял. Я пошёл. Навсегда."],
+["Принтер","Вайбкодер в 1996-м открыл ларёк: «Чиню принтеры силой мысли».\nОчередь — до горизонта. Первый клиент: «Матричный, ленту зажевало».\nВайбкодер: «...А давайте лучше я вам сайт сделаю»."],
+["Пейджер","— У тебя пейджер есть?\n— Нет, у меня телеграм.\n— Это где?\n— В телефоне.\n— А телефон где?\n*достаёт смартфон*\n— ...Это что, телевизор с кнопками?"],
+["Начальник","Вайбкодер: «Я из будущего. Там ИИ всё делает».\n1996-й: «А люди что делают?»\n— «Пишут ему „сделай красиво“ и ждут».\n— «А-а-а. То есть ты — начальник».\n— «...В каком-то смысле да»."],
+["Сейвы","— А игры у вас какие?\n— Денди, Сега!\n— А сейвы где?\n— Какие сейвы? Прошёл — молодец, не прошёл — начинай сначала.\n— Жесть. У нас автосейв каждые 30 секунд.\n— Скучно живёте."]
+]}
+];
+var cur = 0;
+var now = new Date();
+var start = Date.parse(now.getFullYear() + '-01-01T00:00:00');
+var day = Math.floor((now - start) / 86400000);
+var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+document.getElementById('dateline').textContent =
+  now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' года';
+document.getElementById('issue').textContent = 100 + (day % 200);
+function render(){
+  document.getElementById('edname').textContent = EDITIONS[cur].name;
+  var list = EDITIONS[cur].jokes;
+  document.getElementById('lead').textContent = list[day % list.length][1];
+  var all = document.getElementById('all'); all.innerHTML = '';
+  for (var i = 0; i < list.length; i++) {
+    var a = document.createElement('article');
+    var h = document.createElement('h3');
+    var num = document.createElement('span'); num.className = 'n'; num.textContent = (i + 1) + '.';
+    h.appendChild(num); h.appendChild(document.createTextNode(list[i][0]));
+    var p = document.createElement('p'); p.textContent = list[i][1];
+    a.appendChild(h); a.appendChild(p); all.appendChild(a);
+  }
+  var btns = document.querySelectorAll('#tabs .tab');
+  for (var j = 0; j < btns.length; j++) btns[j].classList.toggle('on', j === cur);
+}
+(function(){
+  var tabs = document.getElementById('tabs');
+  for (var i = 0; i < EDITIONS.length; i++) {
+    (function(i){
+      var b = document.createElement('button');
+      b.className = 'tab'; b.textContent = EDITIONS[i].name;
+      b.addEventListener('click', function(){ cur = i; render(); });
+      tabs.appendChild(b);
+    })(i);
+  }
+  render();
+})();
+</script>
+</body>
+</html>
